@@ -27,7 +27,18 @@ npm run dev
 4. Environment Variables에 `OPENAI_API_KEY`를 추가합니다. 사용할 환경(Production, Preview 등)에 적용합니다.
 5. **Deploy**를 실행합니다. 환경변수를 나중에 변경했다면 재배포합니다.
 
-정적 화면은 `public/`에서 제공하며, Express 앱은 `src/app.js`의 기본 내보내기를 통해 실행됩니다. 로컬용 `server.js`는 서버를 시작하는 역할입니다. CLI로 배포하려면 프로젝트 폴더에서 `npx vercel`을 실행할 수도 있습니다.
+정적 화면은 Vercel CDN이 `public/`에서 제공하며, Express 앱은 `src/app.js`의 기본 내보내기를 통해 실행됩니다. 로컬에서만 `scripts/start.js`가 포트를 열며, 배포 진입점은 직접 `listen()`을 호출하지 않습니다. CLI로 배포하려면 프로젝트 폴더에서 `npx vercel`을 실행할 수도 있습니다.
+
+### 배포 설정
+
+- `framework: "express"`: Vercel의 기본 Express 지원을 사용합니다. API 요청은 Express 앱으로 전달되고 `public/` 파일은 정적으로 제공됩니다.
+- `installCommand: "npm ci"`: 커밋된 `package-lock.json`을 사용해 동일한 버전의 의존성을 설치합니다.
+- `functions["src/app.js"].maxDuration: 60`: OpenAI 호출의 45초 제한 이후 오류 응답을 보낼 수 있도록 여유를 둡니다.
+- Node.js 버전은 `package.json`에서 `24.x`로 지정합니다.
+
+기존 Vercel 프로젝트의 **Settings → Build and Deployment**에 다른 프레임워크, Build Command 또는 Output Directory 오버라이드가 있으면 제거하고 Express 기본값을 사용하세요. Output Directory를 `public`으로 직접 지정하지 마세요. 정적 사이트로만 배포하면 `/api/chat`이 실행되지 않습니다. CLI는 Express를 지원하는 47.0.5 이상의 버전을 사용하세요.
+
+배포 후 `/`에서 화면이 표시되고 `/styles.css`, `/app.js`가 로드되는지 확인하세요. `POST /api/chat`에 `{"messages":[{"role":"user","content":"안녕"}]}`를 보내면 API 키가 설정된 경우 `{"reply":"..."}`를 반환합니다. 503과 `OPENAI_API_KEY` 안내가 반환되면 Vercel 환경변수 설정과 재배포 여부를 확인하세요. 404가 반환되면 프로젝트 루트와 프레임워크 설정을 확인하세요. `/api/chat`은 POST 전용이므로 주소창에서 GET으로 열면 404가 정상입니다.
 
 ## 동작과 제한
 
@@ -55,7 +66,7 @@ public/
   styles.css       반응형 스타일
   app.js           대화 기록 및 UI 처리
 src/app.js         Express API와 OpenAI 호출
-server.js          로컬 서버 실행
+scripts/start.js   로컬 서버 실행
 test/chat.test.js  API 테스트
 .env.example      환경변수 예시
 vercel.json       Vercel Express 설정
