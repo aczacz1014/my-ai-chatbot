@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <title>모아 — AI 챗봇</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="chat-app">
+    <header>
+      <div class="brand"><div class="logo" aria-hidden="true">✳</div><div><h1>모아 <span>AI</span></h1><p>생각을 나누는 작은 공간</p></div></div>
+      <button id="reset" class="reset" type="button">＋ 새 대화</button>
+    </header>
+    <section id="conversation" class="conversation" aria-label="대화 내용" role="log" aria-live="polite" aria-relevant="additions">
+      <div id="welcome" class="welcome">
+        <div class="welcome-icon" aria-hidden="true">✳</div>
+        <p class="eyebrow">YOUR EVERYDAY AI COMPANION</p>
+        <h2>어떤 이야기를 나눠 볼까요?</h2>
+        <p>궁금한 질문부터 새로운 아이디어까지.<br>대화를 이어 가며 함께 생각해요.</p>
+        <div class="suggestions">
+          <button type="button" data-prompt="인공지능을 처음 배우는 사람에게 쉽게 설명해 줘."><span>✦</span> 궁금한 것을 배워요 <small>인공지능, 쉽게 설명해 줘</small></button>
+          <button type="button" data-prompt="오늘 저녁 메뉴를 추천해 줘. 먼저 내가 가진 재료를 물어봐 줘."><span>☀</span> 일상을 더 가볍게 <small>오늘 저녁 메뉴를 골라 줘</small></button>
+          <button type="button" data-prompt="짧은 글을 쓰고 싶어. 함께 주제부터 정해 보자."><span>✎</span> 아이디어를 펼쳐요 <small>함께 글쓰기 시작하기</small></button>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <p id="status" class="status" role="status"></p>
+      <form id="chat-form">
+        <label class="sr-only" for="message">메시지</label>
+        <textarea id="message" rows="1" maxlength="12000" placeholder="모아에게 메시지를 보내세요" required></textarea>
+        <button id="send" type="submit" aria-label="메시지 전송">↑</button>
+      </form>
+      <p class="footnote">gpt-4o-mini · Enter로 전송, Shift + Enter로 줄바꿈<br>AI의 답변은 부정확할 수 있어요. 새로고침하면 대화가 초기화됩니다.</p>
+    </footer>
+  </main>
+</body>
+</html>
